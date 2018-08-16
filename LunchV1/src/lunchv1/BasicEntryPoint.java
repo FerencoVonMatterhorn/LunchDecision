@@ -36,16 +36,17 @@ public class BasicEntryPoint implements EntryPoint {
 		Composite toolbarlayer = createToolBarLayer(parent);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
 
-		Composite anwendungslayerLinks = createAnwendungsLayerLinks(parent);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerLinks);
+		Composite anwendungslayerOben = createAnwendungsLayerOben(parent);
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).applyTo(anwendungslayerOben);
 
-//		Composite anwendungslayerRechts = createAnwendungsLayerRechts(parent);
-//		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerRechts);
+		Composite anwendungslayerUnten = createAnwendungsLayerUnten(parent);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerUnten);
 
 		return parent;
 	}
 
-	private Composite createAnwendungsLayerLinks(Composite parent) {
+
+	private Composite createAnwendungsLayerOben(Composite parent) {
 		Composite result = new Composite(parent, SWT.BORDER);
 		result.setLayout(new GridLayout(1, true));
 		Label nationalität = new Label(result, SWT.NONE);
@@ -53,6 +54,12 @@ public class BasicEntryPoint implements EntryPoint {
 		radioButtonsErstellen(result);
 		
 
+		return parent;
+	}
+
+	private Composite createAnwendungsLayerUnten(Composite parent) {
+		Composite result = new Composite(parent, SWT.BORDER);
+		result.setLayout(new FillLayout());
 		return parent;
 	}
 
