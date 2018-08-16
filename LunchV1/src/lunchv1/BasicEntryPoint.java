@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -30,20 +31,33 @@ public class BasicEntryPoint implements EntryPoint {
 	private Composite createLayer(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		Composite logolayer = createLogoLayer(parent);
-		GridDataFactory.fillDefaults().grab(false,false).align(SWT.CENTER, SWT.CENTER).applyTo(logolayer);
-		
-		
+		GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(logolayer);
+
 		Composite toolbarlayer = createToolBarLayer(parent);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
-		
-		Composite anwendungslayer = new Composite(parent, SWT.BORDER);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayer);
-		
-		
-		
+
+		Composite anwendungslayerLinks = createAnwendungsLayerLinks(parent);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerLinks);
+
+//		Composite anwendungslayerRechts = createAnwendungsLayerRechts(parent);
+//		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerRechts);
+
 		return parent;
 	}
-	
+
+	private Composite createAnwendungsLayerLinks(Composite parent) {
+		Composite result = new Composite(parent, SWT.BORDER);
+		result.setLayout(new GridLayout(1, true));
+		Label nationalität = new Label(result, SWT.NONE);
+		nationalität.setText("Nach welchem Essen möchten sie Suchen ?");
+		radioButtonsErstellen(result);
+		Button auswerten = new Button(parent, SWT.BORDER);
+		auswerten.setText("Auswerten");
+		
+
+		return parent;
+	}
+
 	private Composite createToolBarLayer(Composite parent) {
 		Composite result = new Composite(parent, SWT.NONE);
 		result.setLayout(new FillLayout());
@@ -55,8 +69,7 @@ public class BasicEntryPoint implements EntryPoint {
 		calcitem.setText("Calculator");
 //		dieToolbar.addListener(SWT.Dispose, evt -> lunchitem.dispose()); 
 //		Hier muss noch geschaut werden, was genau diese Zeile macht und ob sie zwingend notwendig ist
-		
-		
+
 		return result;
 	}
 
@@ -70,4 +83,23 @@ public class BasicEntryPoint implements EntryPoint {
 		return result;
 	}
 
+	private void radioButtonsErstellen(Composite result) {
+		Button alleAnzeigen = new Button(result, SWT.RADIO);
+		Button pizzaUndPastaAnzeigen = new Button(result, SWT.RADIO);
+		Button asiatischAnzeigen = new Button(result, SWT.RADIO);
+		Button indischAnzeigen = new Button(result, SWT.RADIO);
+		Button dönerAnzeigen = new Button(result, SWT.RADIO);
+		Button burgerUndCoAnzeigen = new Button(result, SWT.RADIO);
+		Button andereAnzeigen = new Button(result, SWT.RADIO);
+		Button randomeAnzeigen = new Button(result, SWT.RADIO);
+
+		alleAnzeigen.setText("Alle");
+		pizzaUndPastaAnzeigen.setText("Pizza & Pasta");
+		asiatischAnzeigen.setText("Asiatisch");
+		indischAnzeigen.setText("Indisch");
+		dönerAnzeigen.setText("Döner");
+		burgerUndCoAnzeigen.setText("Burger & Co");
+		andereAnzeigen.setText("Andere");
+		randomeAnzeigen.setText("Randooooooooooooomeee");
+	}
 }
