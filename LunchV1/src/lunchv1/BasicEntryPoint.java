@@ -37,7 +37,7 @@ public class BasicEntryPoint implements EntryPoint {
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
 
 		Composite anwendungslayerLinks = createAnwendungsLayerLinks(parent);
-//		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerLinks);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerLinks);
 
 //		Composite anwendungslayerRechts = createAnwendungsLayerRechts(parent);
 //		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerRechts);
