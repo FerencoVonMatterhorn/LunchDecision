@@ -1,12 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: LunchV1
-Bundle-SymbolicName: LunchV1
+Bundle-SymbolicName: LunchV1;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: lunchv1.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: LunchV1
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.rap.rwt;bundle-version="[3.0.0,4.0.0)"
+Require-Bundle: org.eclipse.rap.rwt;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.rap.jface;bundle-version="3.5.0"
 Import-Package: org.osgi.framework
 Service-Component: OSGI-INF/contribution.xml
+Export-Package: lunchv1
