@@ -66,7 +66,7 @@ public class BasicEntryPoint implements EntryPoint {
 		ToolItem calcitem = new ToolItem(dieToolbar, SWT.PUSH);
 		calcitem.setText("Calculator");
 //		dieToolbar.addListener(SWT.Dispose, evt -> lunchitem.dispose()); 
-//		Hier muss noch geschaut werden, was genau diese Zeile macht und ob sie zwingend notwendig ist
+		Hier muss noch geschaut werden, was genau diese Zeile macht und ob sie zwingend notwendig ist
 
 		return result;
 	}
