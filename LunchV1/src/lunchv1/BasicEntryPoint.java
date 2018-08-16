@@ -51,8 +51,6 @@ public class BasicEntryPoint implements EntryPoint {
 		Label nationalität = new Label(result, SWT.NONE);
 		nationalität.setText("Nach welchem Essen möchten sie Suchen ?");
 		radioButtonsErstellen(result);
-		Button auswerten = new Button(parent, SWT.BORDER);
-		auswerten.setText("Auswerten");
 		
 
 		return parent;
@@ -92,7 +90,9 @@ public class BasicEntryPoint implements EntryPoint {
 		Button burgerUndCoAnzeigen = new Button(result, SWT.RADIO);
 		Button andereAnzeigen = new Button(result, SWT.RADIO);
 		Button randomeAnzeigen = new Button(result, SWT.RADIO);
+		Button auswerten = new Button(result, SWT.BORDER);
 
+		auswerten.setText("Auswerten");
 		alleAnzeigen.setText("Alle");
 		pizzaUndPastaAnzeigen.setText("Pizza & Pasta");
 		asiatischAnzeigen.setText("Asiatisch");
