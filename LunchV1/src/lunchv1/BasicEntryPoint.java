@@ -3,6 +3,10 @@ package lunchv1;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -10,6 +14,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -19,12 +24,13 @@ public class BasicEntryPoint implements EntryPoint {
 	public int createUI() {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display, SWT.NONE);
-		shell.setBounds(0, 0, 1920, 1080);
+		shell.setBounds(display.getBounds());
 		shell.setLayout(new GridLayout(1, true));
 		createLayer(shell);
 		shell.open();
 		shell.layout();
 
+		display.addListener(SWT.Resize, (event) -> shell.setBounds(display.getBounds()));
 		return 0;
 	}
 
@@ -36,57 +42,95 @@ public class BasicEntryPoint implements EntryPoint {
 		Composite toolbarlayer = createToolBarLayer(parent);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
 
-		Composite anwendungslayerOben = createAnwendungsLayerOben(parent);
-		GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).applyTo(anwendungslayerOben);
-
-		Composite anwendungslayerUnten = createAnwendungsLayerUnten(parent);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerUnten);
+		Composite AnwendungslayerOutSide = createAnwendungslayerOutSide(parent);
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).applyTo(AnwendungslayerOutSide);
 
 		return parent;
 	}
 
-
-	private Composite createAnwendungsLayerOben(Composite parent) {
-		Composite result = new Composite(parent, SWT.BORDER);
-		result.setLayout(new GridLayout(1, true));
-		Label nationalität = new Label(result, SWT.NONE);
-		nationalität.setText("Nach welchem Essen möchten sie Suchen ?");
-		radioButtonsErstellen(result);
-		
-
-		return parent;
-	}
-
-	private Composite createAnwendungsLayerUnten(Composite parent) {
-		Composite result = new Composite(parent, SWT.BORDER);
-		result.setLayout(new FillLayout());
-		return parent;
-	}
-
-	private Composite createToolBarLayer(Composite parent) {
-		Composite result = new Composite(parent, SWT.NONE);
-		result.setLayout(new FillLayout());
-		ToolBar dieToolbar = new ToolBar(result, SWT.HORIZONTAL);
-		ToolItem lunchitem = new ToolItem(dieToolbar, SWT.PUSH);
-		lunchitem.setText("Lunch Application");
-		new ToolItem(dieToolbar, SWT.SEPARATOR);
-		ToolItem calcitem = new ToolItem(dieToolbar, SWT.PUSH);
-		calcitem.setText("Calculator");
-//		dieToolbar.addListener(SWT.Dispose, evt -> lunchitem.dispose()); 
-//		Hier muss noch geschaut werden, was genau diese Zeile macht und ob sie zwingend notwendig ist
-
-		return result;
-	}
-
+//----------------------------------LogoLayer---------------------------------------------------------------------------------------------------------------
+	
 	private Composite createLogoLayer(Composite parent) {
 		Composite result = new Composite(parent, SWT.NONE);
 		result.setLayout(new FillLayout());
+		
 		Label logo = new Label(result, SWT.NONE);
 		Image image = new Image(result.getDisplay(), "C:\\Users\\horvayF\\eclipse-workspace\\LunchV1\\Test.png");
 		logo.setImage(image);
 		logo.addListener(SWT.Dispose, evt -> image.dispose());
 		return result;
 	}
+
+//--------------------------------Toolbarlayer-------------------------------------------------------------------------------------------------------------
+	
+	private Composite createToolBarLayer(Composite parent) {
+		Composite result = new Composite(parent, SWT.NONE);
+		result.setLayout(new FillLayout());
+		
+		ToolBar dieToolbar = new ToolBar(result, SWT.HORIZONTAL);
+		ToolItem lunchitem = new ToolItem(dieToolbar, SWT.PUSH);
+		lunchitem.setText("Lunch Application");
+		new ToolItem(dieToolbar, SWT.SEPARATOR);
+		ToolItem calcitem = new ToolItem(dieToolbar, SWT.PUSH);
+		calcitem.setText("Calculator");
+		dieToolbar.addListener(SWT.Dispose, evt -> lunchitem.dispose());
+//		Hier muss noch geschaut werden, was genau diese Zeile macht und ob sie zwingend notwendig ist
+		
+		return result;
+	}
+	
+//-----------------------------------AnwendunsLayer---------------------------------------------------------------------------------------------------------
+
+	private Composite createAnwendungslayerOutSide(Composite parent) {
+		Composite result = new Composite(parent, SWT.NONE);
+		result.setLayout(new GridLayout(2, true));
+		
+		Composite anwendungslayerLinks = createAnwendungsLayerLinks(result);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerLinks);
+		
+		Composite anwendungslayerRechts = createAnwendungsLayerRechts(result);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(anwendungslayerRechts);
+		
+		return parent;
+	}
+
+	
+	private Composite createAnwendungsLayerLinks(Composite parent) {
+		Composite result = new Composite(parent, SWT.BORDER);
+		result.setLayout(new GridLayout(1, true));
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
+
+		Label nationalität = new Label(result, SWT.NONE);
+		nationalität.setText("Nach welchem Essen möchten sie Suchen ?");
+		radioButtonsErstellen(result);
+
+		return parent;
+	}
+
+	private Composite createAnwendungsLayerRechts(Composite parent) {
+		Composite result = new Composite(parent, SWT.BORDER);
+		result.setLayout(new GridLayout(2, true));
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
+
+		Button dertestBTN = new Button(result, SWT.BORDER);
+		dertestBTN.setText("Hier solte etwas stehen lellelelelel");
+
+//		Browser derBrowser;
+		try {
+			Browser browser = new Browser(result, SWT.BORDER);
+			browser.setUrl("https://www.google.de");
+		} catch (SWTError e) {
+			MessageBox messageBox = new MessageBox(result.getShell(), SWT.ICON_ERROR | SWT.OK);
+			messageBox.setMessage("Browser cannot be initialized.");
+			messageBox.setText("Exit");
+			messageBox.open();
+			System.exit(-1);
+		}
+
+		return parent;
+	}
+
+//--------------------------------------Buttons----------------------------------------------------------------------------------------------
 
 	private void radioButtonsErstellen(Composite result) {
 		Button alleAnzeigen = new Button(result, SWT.RADIO);
@@ -108,5 +152,55 @@ public class BasicEntryPoint implements EntryPoint {
 		burgerUndCoAnzeigen.setText("Burger & Co");
 		andereAnzeigen.setText("Andere");
 		randomeAnzeigen.setText("Randooooooooooooomeee");
+
+		listenerAnButtonsHängen(alleAnzeigen, pizzaUndPastaAnzeigen, asiatischAnzeigen, indischAnzeigen, dönerAnzeigen,
+				burgerUndCoAnzeigen, andereAnzeigen, randomeAnzeigen);
+	}
+
+	
+	
+	private void listenerAnButtonsHängen(Button alleAnzeigen, Button pizzaUndPastaAnzeigen, Button asiatischAnzeigen,
+			Button indischAnzeigen, Button dönerAnzeigen, Button burgerUndCoAnzeigen, Button andereAnzeigen,
+			Button randomeAnzeigen) {
+		alleAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
+		pizzaUndPastaAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
+		asiatischAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
+		indischAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
+		dönerAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
+		burgerUndCoAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
+		andereAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
+		randomeAnzeigen.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Ausgewählt");
+			}
+		});
 	}
 }
