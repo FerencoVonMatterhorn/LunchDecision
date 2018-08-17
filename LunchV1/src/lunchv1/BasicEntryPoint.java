@@ -111,7 +111,7 @@ public class BasicEntryPoint implements EntryPoint {
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
 
 		//Button dertestBTN = new Button(result, SWT.BORDER);
-		//dertestBTN.setText("Hier solte etwas stehen lellelelelel");
+		//dertestBTN.seText("Hier solte etwas stehen lellelelelel");
 
 		final Browser browser = new Browser(result, SWT.BORDER); // Uses IE on MS
         browser.setUrl("https://wego.here.com/?map=48.47265,7.92901,15,satellite");
