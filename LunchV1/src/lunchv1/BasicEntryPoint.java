@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class BasicEntryPoint implements EntryPoint {
+	static Browser browser;
 
 	public int createUI() {
 		Display display = Display.getDefault();
@@ -53,7 +54,7 @@ public class BasicEntryPoint implements EntryPoint {
 		result.setLayout(new FillLayout());
 		
 		Label logo = new Label(result, SWT.NONE);
-		Image image = new Image(result.getDisplay(), "C:\\Users\\horvayF\\eclipse-workspace\\LunchV1\\Test.png");
+		Image image = new Image(result.getDisplay(), "/home/ferenc/git/LunchDecision/LunchV1/res/Test.png");
 		logo.setImage(image);
 		logo.addListener(SWT.Dispose, evt -> image.dispose());
 		return result;
@@ -94,27 +95,27 @@ public class BasicEntryPoint implements EntryPoint {
 
 	
 	private Composite createAnwendungsLayerLinks(Composite parent) {
-		Composite result = new Composite(parent, SWT.BORDER);
+		Composite result = new Composite(parent, SWT.NONE);
 		result.setLayout(new GridLayout(1, true));
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
 
-		Label nationalit‰t = new Label(result, SWT.NONE);
-		nationalit‰t.setText("Nach welchem Essen mˆchten sie Suchen ?");
+		Label nationalit√§t = new Label(result, SWT.NONE);
+		nationalit√§t.setText("Nach welchem Essen m√∂chten sie Suchen ?");
 		radioButtonsErstellen(result);
 
 		return parent;
 	}
 
 	private Composite createAnwendungsLayerRechts(Composite parent) {
-		Composite result = new Composite(parent, SWT.BORDER);
+		Composite result = new Composite(parent, SWT.NONE);
 		result.setLayout(new GridLayout(1, true));
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
 
 		//Button dertestBTN = new Button(result, SWT.BORDER);
 		//dertestBTN.eText("Hier solte etwas stehen lellelelelel");
-
-		final Browser browser = new Browser(result, SWT.BORDER); // Uses IE on MS
+		browser = new Browser(result, SWT.BORDER); // Uses IE on MS
         browser.setUrl("https://wego.here.com/?map=48.47265,7.92901,15,satellite");
+        
         
         GridDataFactory.fillDefaults().grab(true, true).applyTo(browser);
         
@@ -122,77 +123,86 @@ public class BasicEntryPoint implements EntryPoint {
         listeessen.setText("Hier sollte dann mal was essbares stehen");
         return parent;
 	}
+	
 
 //--------------------------------------Buttons----------------------------------------------------------------------------------------------
 
 	private void radioButtonsErstellen(Composite result) {
-		Button alleAnzeigen = new Button(result, SWT.RADIO);
-		Button pizzaUndPastaAnzeigen = new Button(result, SWT.RADIO);
-		Button asiatischAnzeigen = new Button(result, SWT.RADIO);
-		Button indischAnzeigen = new Button(result, SWT.RADIO);
-		Button dˆnerAnzeigen = new Button(result, SWT.RADIO);
-		Button burgerUndCoAnzeigen = new Button(result, SWT.RADIO);
-		Button andereAnzeigen = new Button(result, SWT.RADIO);
-		Button randomeAnzeigen = new Button(result, SWT.RADIO);
-		Button auswerten = new Button(result, SWT.BORDER);
+		Button alleAnzeigen = new Button(result, SWT.BORDER);
+		Button pizzaUndPastaAnzeigen = new Button(result, SWT.BORDER);
+		Button asiatischAnzeigen = new Button(result, SWT.BORDER);
+		Button indischAnzeigen = new Button(result, SWT.BORDER);
+		Button d√∂nerAnzeigen = new Button(result, SWT.BORDER);
+		Button burgerUndCoAnzeigen = new Button(result, SWT.BORDER);
+		Button andereAnzeigen = new Button(result, SWT.BORDER);
+		Button randomeAnzeigen = new Button(result, SWT.BORDER);
+		//Button auswerten = new Button(result, SWT.BORDER);
 
-		auswerten.setText("Auswerten");
+		//auswerten.setText("Auswerten");
 		alleAnzeigen.setText("Alle");
 		pizzaUndPastaAnzeigen.setText("Pizza & Pasta");
 		asiatischAnzeigen.setText("Asiatisch");
 		indischAnzeigen.setText("Indisch");
-		dˆnerAnzeigen.setText("Dˆner");
+		d√∂nerAnzeigen.setText("D√∂ner");
 		burgerUndCoAnzeigen.setText("Burger & Co");
 		andereAnzeigen.setText("Andere");
 		randomeAnzeigen.setText("Randooooooooooooomeee");
 
-		listenerAnButtonsH‰ngen(alleAnzeigen, pizzaUndPastaAnzeigen, asiatischAnzeigen, indischAnzeigen, dˆnerAnzeigen,
+		listenerAnButtonsH√§ngen(alleAnzeigen, pizzaUndPastaAnzeigen, asiatischAnzeigen, indischAnzeigen, d√∂nerAnzeigen,
 				burgerUndCoAnzeigen, andereAnzeigen, randomeAnzeigen);
 	}
 
 	
 	
-	private void listenerAnButtonsH‰ngen(Button alleAnzeigen, Button pizzaUndPastaAnzeigen, Button asiatischAnzeigen,
-			Button indischAnzeigen, Button dˆnerAnzeigen, Button burgerUndCoAnzeigen, Button andereAnzeigen,
+	private void listenerAnButtonsH√§ngen(Button alleAnzeigen, Button pizzaUndPastaAnzeigen, Button asiatischAnzeigen,
+			Button indischAnzeigen, Button d√∂nerAnzeigen, Button burgerUndCoAnzeigen, Button andereAnzeigen,
 			Button randomeAnzeigen) {
 		alleAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/restaurant?map=48.47335,7.93724,15,satellite");
 			}
 		});
 		pizzaUndPastaAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/Pizza?map=48.47335,7.93724,15,satellite");
 			}
 		});
 		asiatischAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/Asiatisch?map=48.47335,7.93724,15,satellite");
 			}
 		});
 		indischAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/indisch?map=48.47335,7.93724,15,satellite");
 			}
 		});
-		dˆnerAnzeigen.addSelectionListener(new SelectionAdapter() {
+		d√∂nerAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/d√∂ner?map=48.47335,7.93724,15,satellite");
 			}
 		});
 		burgerUndCoAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/burger?map=48.47335,7.93724,15,satellite");
 			}
 		});
 		andereAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/andere?map=48.47335,7.93724,15,satellite");
 			}
 		});
 		randomeAnzeigen.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Ausgew‰hlt");
+				System.out.println("Ausgew√§hlt");
+				browser.setUrl("https://wego.here.com/search/randome?map=48.47335,7.93724,15,satellite");
 			}
 		});
 	}
