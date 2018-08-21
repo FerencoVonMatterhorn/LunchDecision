@@ -17,11 +17,19 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class BasicEntryPoint implements EntryPoint {
-	static Browser browser;
+	Browser browser;
+	ToolItem kanPlan;
+	ToolItem lunchItem;
+	Composite searchbarlayer;
+	Composite searchbarlayer1;
+	Composite anwendungslayer;
+	Composite kantinenLayer;
+	Shell shell;
+	Display display;
 
 	public int createUI() {
-		Display display = Display.getDefault();
-		Shell shell = new Shell(display, SWT.NONE);
+		display = Display.getDefault();
+		shell = new Shell(display, SWT.NONE);
 		shell.setBounds(display.getBounds());
 		shell.setLayout(new GridLayout(1, true));
 		createLayer(shell);
@@ -41,11 +49,32 @@ public class BasicEntryPoint implements EntryPoint {
 		Composite logolayer = createLogoLayer(parent);
 		GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(logolayer);
 
-		Composite searchbarlayer = createSearchBarLayer(parent);
-//		GridDataFactory.fillDefaults().grab(true, true).applyTo(searchbarlayer);
+		kanPlan.addListener(SWT.Selection, (event) -> {
+			searchbarlayer.dispose();
+			searchbarlayer1.dispose();
+			anwendungslayer.dispose();
+			kantinenLayer = createKantinenLayer(parent);
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(kantinenLayer);
+			shell.layout();
 
-		Composite Anwendungslayer = createAnwendungslayer(parent);
-		GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).applyTo(Anwendungslayer);
+		});
+
+		lunchItem.addListener(SWT.Selection, (event) -> {
+			kantinenLayer.dispose();
+				createSearchBarLayer(parent);
+				createSearchBarLayer1(parent);
+				createAnwendungslayer(parent);
+				shell.layout();
+				
+			
+
+		});
+
+		searchbarlayer = createSearchBarLayer(parent);
+		searchbarlayer1 = createSearchBarLayer1(parent);
+
+		anwendungslayer = createAnwendungslayer(parent);
+		
 
 		return parent;
 	}
@@ -56,16 +85,7 @@ public class BasicEntryPoint implements EntryPoint {
 		Composite result = new Composite(parent, SWT.NONE);
 		result.setLayout(new FillLayout());
 
-		ToolBar dieToolbar = new ToolBar(result, SWT.HORIZONTAL);
-		ToolItem lunchitem = new ToolItem(dieToolbar, SWT.PUSH);
-		lunchitem.setText("LunchFinder");
-		new ToolItem(dieToolbar, SWT.SEPARATOR);
-		ToolItem votingItem = new ToolItem(dieToolbar, SWT.PUSH);
-		votingItem.setText("Voting");
-		new ToolItem(dieToolbar, SWT.SEPARATOR);
-		ToolItem kanPlan = new ToolItem(dieToolbar, SWT.PUSH);
-		kanPlan.setText("Wochenplan Kantine");
-		dieToolbar.addListener(SWT.Dispose, evt -> lunchitem.dispose());
+		addToolBarItems(result);
 
 		return result;
 	}
@@ -88,8 +108,8 @@ public class BasicEntryPoint implements EntryPoint {
 	private Composite createSearchBarLayer(Composite parent) {
 		Composite result = new Composite(parent, SWT.BORDER);
 		result.setLayout(new FillLayout());
-
 		GridDataFactory.fillDefaults().grab(true, false).align(SWT.CENTER, SWT.CENTER).applyTo(result);
+
 		Text dieSearchbar = new Text(result, SWT.BORDER);
 		Button derGoButton = new Button(result, SWT.BORDER);
 		derGoButton.setText("GO!");
@@ -101,6 +121,16 @@ public class BasicEntryPoint implements EntryPoint {
 			String searchtext = dieSearchbar.getText();
 			browser.setUrl("https://wego.here.com/search/" + searchtext + "?map=48.47265,7.92901,15,satellite");
 		});
+		return result;
+	}
+
+	private Composite createSearchBarLayer1(Composite parent) {
+		Composite result = new Composite(parent, SWT.BORDER);
+		result.setLayout(new FillLayout());
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.CENTER, SWT.CENTER).applyTo(result);
+
+		Button deraufnehmenButton = new Button(result, SWT.BORDER);
+		deraufnehmenButton.setText("Ins Voting aufnehmen");
 		return result;
 	}
 
@@ -116,7 +146,38 @@ public class BasicEntryPoint implements EntryPoint {
 
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(browser);
 
-		return parent;
+		return result;
+	}
+
+//--------------------------------Kantinenlayer----------------------------------------------------------------
+
+	private Composite createKantinenLayer(Composite parent) {
+		Composite result = null;
+		result = new Composite(parent, SWT.NONE);
+		result.setLayout(new GridLayout());
+//		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
+		
+		Label logo = new Label(result, SWT.BORDER);
+		Image image = new Image(result.getDisplay(), "KW34.JPG");
+		logo.setImage(image);
+//		logo.setBounds(0, 0, 1000, 1000);
+		
+		return result;
+	}
+
+// ------------------------extracted-Methods------------------------------------------------------------------------------------
+
+	private void addToolBarItems(Composite result) {
+		ToolBar dieToolbar = new ToolBar(result, SWT.HORIZONTAL);
+		lunchItem = new ToolItem(dieToolbar, SWT.PUSH);
+		lunchItem.setText("LunchFinder");
+		new ToolItem(dieToolbar, SWT.SEPARATOR);
+		ToolItem votingItem = new ToolItem(dieToolbar, SWT.PUSH);
+		votingItem.setText("Voting");
+		new ToolItem(dieToolbar, SWT.SEPARATOR);
+		kanPlan = new ToolItem(dieToolbar, SWT.PUSH);
+		kanPlan.setText("Wochenplan Kantine");
+		dieToolbar.addListener(SWT.Dispose, evt -> lunchItem.dispose());
 	}
 
 }
