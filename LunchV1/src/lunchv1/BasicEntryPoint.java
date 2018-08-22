@@ -31,27 +31,35 @@ public class BasicEntryPoint implements EntryPoint {
 		shell = new Shell(display, SWT.NONE);
 		shell.setBounds(display.getBounds());
 		shell.setLayout(new GridLayout(1, true));
-		
+
 		createLayer(shell);
 		shell.open();
 		shell.layout();
+		
+
+
 
 		display.addListener(SWT.Resize, (event) -> shell.setBounds(display.getBounds()));
 		return 0;
 	}
 
 	private Composite createLayer(Composite parent) {
+		
+		
+		
+		
 		Composite headerComp = new Composite(parent, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(headerComp);
 
 		headerComp.setLayout(new GridLayout(1, false));
 
-		Composite toolbarlayer = createToolBarLayer(headerComp);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
-
 		Composite logolayer = createLogoLayer(headerComp);
 		GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(logolayer);
 
+		Composite toolbarlayer = createToolBarLayer(headerComp);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
+		
+				
 		kanPlan.addListener(SWT.Selection, (event) -> {
 			render(lunchDeclayer, false);
 			render(kantinenLayer, true);
@@ -130,11 +138,11 @@ public class BasicEntryPoint implements EntryPoint {
 // ------------------------extracted-Methods------------------------------------------------------------------------------------
 
 	private void addToolBarItems(Composite result) {
-		ToolBar dieToolbar = new ToolBar(result, SWT.HORIZONTAL);
+		ToolBar dieToolbar = new ToolBar(result, SWT.HORIZONTAL | SWT.BORDER);
 		lunchItem = new ToolItem(dieToolbar, SWT.PUSH);
 		lunchItem.setText("LunchFinder");
 		new ToolItem(dieToolbar, SWT.SEPARATOR);
-		ToolItem votingItem = new ToolItem(dieToolbar, SWT.PUSH);
+		ToolItem votingItem = new ToolItem(dieToolbar, SWT.PUSH); 
 		votingItem.setText("Voting");
 		new ToolItem(dieToolbar, SWT.SEPARATOR);
 		kanPlan = new ToolItem(dieToolbar, SWT.PUSH);
