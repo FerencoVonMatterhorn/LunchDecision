@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -30,6 +31,7 @@ public class BasicEntryPoint implements EntryPoint {
 		shell = new Shell(display, SWT.NONE);
 		shell.setBounds(display.getBounds());
 		shell.setLayout(new GridLayout(1, true));
+		
 		createLayer(shell);
 		shell.open();
 		shell.layout();
@@ -39,38 +41,36 @@ public class BasicEntryPoint implements EntryPoint {
 	}
 
 	private Composite createLayer(Composite parent) {
-		parent.setLayout(new GridLayout(1, false));
+		Composite headerComp = new Composite(parent, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(headerComp);
 
-		Composite toolbarlayer = createToolBarLayer(parent);
+		headerComp.setLayout(new GridLayout(1, false));
+
+		Composite toolbarlayer = createToolBarLayer(headerComp);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
 
-		Composite logolayer = createLogoLayer(parent);
+		Composite logolayer = createLogoLayer(headerComp);
 		GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(logolayer);
-
-		
-		
 
 		kanPlan.addListener(SWT.Selection, (event) -> {
 			render(lunchDeclayer, false);
 			render(kantinenLayer, true);
-			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(kantinenLayer);
-			shell.layout();
 
 		});
 
 		lunchItem.addListener(SWT.Selection, (event) -> {
 			render(kantinenLayer, false);
 			render(lunchDeclayer, true);
-			createLunchDecLayer(parent);
-			shell.layout();
-
 		});
-
-		createLunchDecLayer(parent);
-		createKantinenPlan(parent);
+		Composite contentPane = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(2, false);
+		contentPane.setLayout(gridLayout);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(contentPane);
+		lunchDeclayer = createLunchDecLayer(contentPane);
+		kantinenLayer = createKantinenPlan(contentPane);
+		render(kantinenLayer, false);
 		return parent;
 	}
-
 
 //--------------------------------Toolbarlayer-------------------------------------------------------------------------------------------------------------
 
@@ -127,8 +127,6 @@ public class BasicEntryPoint implements EntryPoint {
 		return result;
 	}
 
-
-
 // ------------------------extracted-Methods------------------------------------------------------------------------------------
 
 	private void addToolBarItems(Composite result) {
@@ -146,17 +144,17 @@ public class BasicEntryPoint implements EntryPoint {
 
 	private LunchdecKlasse createLunchDecLayer(Composite parent) {
 		return new LunchdecKlasse(parent, SWT.NONE);
-		
+
 	}
-	
+
 	private KPlanKlasse createKantinenPlan(Composite parent) {
 		return new KPlanKlasse(parent, SWT.NONE);
 	}
-	
-	private void render(Composite parent, boolean truefalse) {
-		GridDataFactory.fillDefaults().exclude(!truefalse).applyTo(parent);
-		parent.setVisible(truefalse);
-		
-		
+
+	private void render(Composite parent, boolean isVisible) {
+		GridData layoutData = (GridData) parent.getLayoutData();
+		layoutData.exclude = !isVisible;
+		parent.setVisible(isVisible);
+		parent.layout();
 	}
 }

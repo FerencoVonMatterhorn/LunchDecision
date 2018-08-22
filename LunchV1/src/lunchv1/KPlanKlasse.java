@@ -1,5 +1,6 @@
 package lunchv1;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
@@ -14,14 +15,14 @@ public class KPlanKlasse extends Composite {
 	}
 
 	private Composite createKantinenLayer(Composite parent) {
-		Composite result = null;
-		result = new Composite(parent, SWT.NONE);
-		result.setLayout(new GridLayout());
+		parent.setLayout(new GridLayout());
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(parent);
 	
-		Label logo = new Label(result, SWT.BORDER);
-		Image image = new Image(result.getDisplay(), "KW34.JPG");
+		Label logo = new Label(parent, SWT.BORDER);
+		Image image = new Image(parent.getDisplay(), "KW34.JPG");
 		logo.setImage(image);
+		getShell().layout();
 		
-		return result;
+		return parent;
 	}
 }

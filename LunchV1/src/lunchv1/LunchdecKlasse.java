@@ -22,7 +22,7 @@ public class LunchdecKlasse extends Composite {
 	}
 
 	private Composite createLunchDecLayer(Composite parent) {
-		parent.setLayout(new GridLayout(2, true));
+		parent.setLayout(new GridLayout(1, true));
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(parent);
 
 		browser = new Browser(parent, SWT.BORDER); // Uses IE on MS
