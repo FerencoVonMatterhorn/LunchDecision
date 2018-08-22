@@ -20,9 +20,7 @@ public class BasicEntryPoint implements EntryPoint {
 	Browser browser;
 	ToolItem kanPlan;
 	ToolItem lunchItem;
-	Composite searchbarlayer;
-	Composite searchbarlayer1;
-	Composite anwendungslayer;
+	LunchdecKlasse lunchDeclayer;
 	Composite kantinenLayer;
 	Shell shell;
 	Display display;
@@ -49,35 +47,30 @@ public class BasicEntryPoint implements EntryPoint {
 		Composite logolayer = createLogoLayer(parent);
 		GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(logolayer);
 
+		
+		
+
 		kanPlan.addListener(SWT.Selection, (event) -> {
-			searchbarlayer.dispose();
-			searchbarlayer1.dispose();
-			anwendungslayer.dispose();
-			kantinenLayer = createKantinenLayer(parent);
+			render(lunchDeclayer, false);
+			render(kantinenLayer, true);
 			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(kantinenLayer);
 			shell.layout();
 
 		});
 
 		lunchItem.addListener(SWT.Selection, (event) -> {
-			kantinenLayer.dispose();
-				createSearchBarLayer(parent);
-				createSearchBarLayer1(parent);
-				createAnwendungslayer(parent);
-				shell.layout();
-				
-			
+			render(kantinenLayer, false);
+			render(lunchDeclayer, true);
+			createLunchDecLayer(parent);
+			shell.layout();
 
 		});
 
-		searchbarlayer = createSearchBarLayer(parent);
-		searchbarlayer1 = createSearchBarLayer1(parent);
-
-		anwendungslayer = createAnwendungslayer(parent);
-		
-
+		createLunchDecLayer(parent);
+		createKantinenPlan(parent);
 		return parent;
 	}
+
 
 //--------------------------------Toolbarlayer-------------------------------------------------------------------------------------------------------------
 
@@ -134,36 +127,7 @@ public class BasicEntryPoint implements EntryPoint {
 		return result;
 	}
 
-//-----------------------------------AnwendunsLayer---------------------------------------------------------------------------------------------------------
 
-	private Composite createAnwendungslayer(Composite parent) {
-		Composite result = new Composite(parent, SWT.NONE);
-		result.setLayout(new GridLayout(1, true));
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
-
-		browser = new Browser(result, SWT.BORDER); // Uses IE on MS
-		browser.setUrl("https://wego.here.com/?map=48.47265,7.92901,15,satellite");
-
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(browser);
-
-		return result;
-	}
-
-//--------------------------------Kantinenlayer----------------------------------------------------------------
-
-	private Composite createKantinenLayer(Composite parent) {
-		Composite result = null;
-		result = new Composite(parent, SWT.NONE);
-		result.setLayout(new GridLayout());
-//		GridDataFactory.fillDefaults().grab(true, true).applyTo(result);
-		
-		Label logo = new Label(result, SWT.BORDER);
-		Image image = new Image(result.getDisplay(), "KW34.JPG");
-		logo.setImage(image);
-//		logo.setBounds(0, 0, 1000, 1000);
-		
-		return result;
-	}
 
 // ------------------------extracted-Methods------------------------------------------------------------------------------------
 
@@ -180,4 +144,19 @@ public class BasicEntryPoint implements EntryPoint {
 		dieToolbar.addListener(SWT.Dispose, evt -> lunchItem.dispose());
 	}
 
+	private LunchdecKlasse createLunchDecLayer(Composite parent) {
+		return new LunchdecKlasse(parent, SWT.NONE);
+		
+	}
+	
+	private KPlanKlasse createKantinenPlan(Composite parent) {
+		return new KPlanKlasse(parent, SWT.NONE);
+	}
+	
+	private void render(Composite parent, boolean truefalse) {
+		GridDataFactory.fillDefaults().exclude(!truefalse).applyTo(parent);
+		parent.setVisible(truefalse);
+		
+		
+	}
 }
