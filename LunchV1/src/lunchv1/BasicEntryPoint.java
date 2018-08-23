@@ -4,6 +4,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -25,29 +26,36 @@ public class BasicEntryPoint implements EntryPoint {
 	Composite kantinenLayer;
 	Shell shell;
 	Display display;
+	private ScrolledComposite scrolledComposite;
+	private Composite content;
 
 	public int createUI() {
 		display = Display.getDefault();
 		shell = new Shell(display, SWT.NONE);
 		shell.setBounds(display.getBounds());
-		shell.setLayout(new GridLayout(1, true));
+		FillLayout layout = new FillLayout();
+		shell.setLayout(layout);
 
-		createLayer(shell);
+		scrolledComposite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+
+		content = new Composite(scrolledComposite, SWT.NONE);
+		content.setLayout(new GridLayout(1, true));
+		createLayer(content);
+
+		scrolledComposite.setContent(content);
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
 		shell.open();
 		shell.layout();
-		
-
-
 
 		display.addListener(SWT.Resize, (event) -> shell.setBounds(display.getBounds()));
 		return 0;
 	}
 
 	private Composite createLayer(Composite parent) {
-		
-		
-		
-		
+
 		Composite headerComp = new Composite(parent, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(headerComp);
 
@@ -58,8 +66,7 @@ public class BasicEntryPoint implements EntryPoint {
 
 		Composite toolbarlayer = createToolBarLayer(headerComp);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
-		
-				
+
 		kanPlan.addListener(SWT.Selection, (event) -> {
 			render(lunchDeclayer, false);
 			render(kantinenLayer, true);
@@ -70,6 +77,7 @@ public class BasicEntryPoint implements EntryPoint {
 			render(kantinenLayer, false);
 			render(lunchDeclayer, true);
 		});
+
 		Composite contentPane = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(2, false);
 		contentPane.setLayout(gridLayout);
@@ -77,6 +85,7 @@ public class BasicEntryPoint implements EntryPoint {
 		lunchDeclayer = createLunchDecLayer(contentPane);
 		kantinenLayer = createKantinenPlan(contentPane);
 		render(kantinenLayer, false);
+
 		return parent;
 	}
 
@@ -122,6 +131,7 @@ public class BasicEntryPoint implements EntryPoint {
 			String searchtext = dieSearchbar.getText();
 			browser.setUrl("https://wego.here.com/search/" + searchtext + "?map=48.47265,7.92901,15,satellite");
 		});
+
 		return result;
 	}
 
@@ -142,7 +152,7 @@ public class BasicEntryPoint implements EntryPoint {
 		lunchItem = new ToolItem(dieToolbar, SWT.PUSH);
 		lunchItem.setText("LunchFinder");
 		new ToolItem(dieToolbar, SWT.SEPARATOR);
-		ToolItem votingItem = new ToolItem(dieToolbar, SWT.PUSH); 
+		ToolItem votingItem = new ToolItem(dieToolbar, SWT.PUSH);
 		votingItem.setText("Voting");
 		new ToolItem(dieToolbar, SWT.SEPARATOR);
 		kanPlan = new ToolItem(dieToolbar, SWT.PUSH);
@@ -163,6 +173,6 @@ public class BasicEntryPoint implements EntryPoint {
 		GridData layoutData = (GridData) parent.getLayoutData();
 		layoutData.exclude = !isVisible;
 		parent.setVisible(isVisible);
-		parent.layout();
+		scrolledComposite.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 }

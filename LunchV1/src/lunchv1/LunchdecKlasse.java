@@ -24,12 +24,15 @@ public class LunchdecKlasse extends Composite {
 	private Composite createLunchDecLayer(Composite parent) {
 		parent.setLayout(new GridLayout(1, true));
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(parent);
-
+		
+		
 		browser = new Browser(parent, SWT.BORDER); // Uses IE on MS
 		browser.setUrl("https://wego.here.com/?map=48.47265,7.92901,15,satellite");
 
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(browser);
 
+		
+		
 		return parent;
 	}
 

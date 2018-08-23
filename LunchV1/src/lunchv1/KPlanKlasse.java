@@ -17,8 +17,10 @@ public class KPlanKlasse extends Composite {
 	private Composite createKantinenLayer(Composite parent) {
 		parent.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(parent);
-	
-		Label logo = new Label(parent, SWT.BORDER);
+		
+		
+		
+		Label logo = new Label(parent, SWT.FLAT);
 		Image image = new Image(parent.getDisplay(), "KW34.JPG");
 		logo.setImage(image);
 		getShell().layout();
