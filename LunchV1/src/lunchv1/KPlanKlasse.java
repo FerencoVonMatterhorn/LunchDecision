@@ -22,6 +22,7 @@ public class KPlanKlasse extends Composite {
 		
 		Label logo = new Label(parent, SWT.FLAT);
 		Image image = new Image(parent.getDisplay(), "KW34.JPG");
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(logo);
 		logo.setImage(image);
 		getShell().layout();
 		

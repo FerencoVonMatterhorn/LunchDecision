@@ -19,11 +19,16 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class BasicEntryPoint implements EntryPoint {
+	Text mandant;
 	Browser browser;
-	ToolItem kanPlan;
-	ToolItem lunchItem;
+	ToolItem kantinenPlanItem;
+	ToolItem lunchDecItem;
+	ToolItem votingItem;
+
 	LunchdecKlasse lunchDeclayer;
-	Composite kantinenLayer;
+	KPlanKlasse kantinenLayer;
+	MandantAuswahlKlasse mandantenAuswahlLayer;
+	VotingKlasse votingLayer;
 	Shell shell;
 	Display display;
 	private ScrolledComposite scrolledComposite;
@@ -61,21 +66,37 @@ public class BasicEntryPoint implements EntryPoint {
 
 		headerComp.setLayout(new GridLayout(1, false));
 
+		mandant = new Text(headerComp, SWT.NONE);
+		mandant.setText("Mandant: ");
+		mandant.setEditable(false);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(mandant);
+
 		Composite logolayer = createLogoLayer(headerComp);
 		GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(logolayer);
 
 		Composite toolbarlayer = createToolBarLayer(headerComp);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
 
-		kanPlan.addListener(SWT.Selection, (event) -> {
+		kantinenPlanItem.addListener(SWT.Selection, (event) -> {
 			render(lunchDeclayer, false);
+			render(votingLayer, false);
+			render(mandantenAuswahlLayer, false);
 			render(kantinenLayer, true);
 
 		});
 
-		lunchItem.addListener(SWT.Selection, (event) -> {
+		lunchDecItem.addListener(SWT.Selection, (event) -> {
 			render(kantinenLayer, false);
+			render(votingLayer, false);
+			render(mandantenAuswahlLayer, false);
 			render(lunchDeclayer, true);
+		});
+
+		votingItem.addListener(SWT.Selection, (event) -> {
+			render(kantinenLayer, false);
+			render(lunchDeclayer, false);
+			render(mandantenAuswahlLayer, false);
+			render(votingLayer, true);
 		});
 
 		Composite contentPane = new Composite(parent, SWT.NONE);
@@ -83,8 +104,21 @@ public class BasicEntryPoint implements EntryPoint {
 		contentPane.setLayout(gridLayout);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(contentPane);
 		lunchDeclayer = createLunchDecLayer(contentPane);
-		kantinenLayer = createKantinenPlan(contentPane);
+		kantinenLayer = createKantinenPlanLayer(contentPane);
+		mandantenAuswahlLayer = createMandantAuswahlLayer(contentPane);
+		votingLayer = createVotinLayer(contentPane);
 		render(kantinenLayer, false);
+		render(lunchDeclayer, false);
+		render(votingLayer, false);
+		render(mandantenAuswahlLayer, true);
+
+
+
+		mandantenAuswahlLayer.registerOnButtonClick(
+				(combo) -> mandant.setText("Mandant: " + combo.getItem(combo.getSelectionIndex())));
+		
+
+		
 
 		return parent;
 	}
@@ -110,6 +144,7 @@ public class BasicEntryPoint implements EntryPoint {
 		Image image = new Image(result.getDisplay(), "Test.png");
 		logo.setImage(image);
 		logo.addListener(SWT.Dispose, evt -> image.dispose());
+
 		return result;
 	}
 
@@ -149,15 +184,15 @@ public class BasicEntryPoint implements EntryPoint {
 
 	private void addToolBarItems(Composite result) {
 		ToolBar dieToolbar = new ToolBar(result, SWT.HORIZONTAL | SWT.BORDER);
-		lunchItem = new ToolItem(dieToolbar, SWT.PUSH);
-		lunchItem.setText("LunchFinder");
+		lunchDecItem = new ToolItem(dieToolbar, SWT.PUSH);
+		lunchDecItem.setText("LunchFinder");
 		new ToolItem(dieToolbar, SWT.SEPARATOR);
-		ToolItem votingItem = new ToolItem(dieToolbar, SWT.PUSH);
+		votingItem = new ToolItem(dieToolbar, SWT.PUSH);
 		votingItem.setText("Voting");
 		new ToolItem(dieToolbar, SWT.SEPARATOR);
-		kanPlan = new ToolItem(dieToolbar, SWT.PUSH);
-		kanPlan.setText("Wochenplan Kantine");
-		dieToolbar.addListener(SWT.Dispose, evt -> lunchItem.dispose());
+		kantinenPlanItem = new ToolItem(dieToolbar, SWT.PUSH);
+		kantinenPlanItem.setText("Wochenplan Kantine");
+		dieToolbar.addListener(SWT.Dispose, evt -> lunchDecItem.dispose());
 	}
 
 	private LunchdecKlasse createLunchDecLayer(Composite parent) {
@@ -165,8 +200,16 @@ public class BasicEntryPoint implements EntryPoint {
 
 	}
 
-	private KPlanKlasse createKantinenPlan(Composite parent) {
+	private KPlanKlasse createKantinenPlanLayer(Composite parent) {
 		return new KPlanKlasse(parent, SWT.NONE);
+	}
+
+	private MandantAuswahlKlasse createMandantAuswahlLayer(Composite parent) {
+		return new MandantAuswahlKlasse(parent, SWT.NONE);
+	}
+
+	private VotingKlasse createVotinLayer(Composite parent) {
+		return new VotingKlasse(parent, SWT.NONE);
 	}
 
 	private void render(Composite parent, boolean isVisible) {
@@ -175,4 +218,5 @@ public class BasicEntryPoint implements EntryPoint {
 		parent.setVisible(isVisible);
 		scrolledComposite.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
+
 }
