@@ -1,6 +1,9 @@
 package lunchv1;
 
+import java.util.stream.Stream;
+
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -24,6 +27,7 @@ public class BasicEntryPoint implements EntryPoint {
 	ToolItem kantinenPlanItem;
 	ToolItem lunchDecItem;
 	ToolItem votingItem;
+	ToolItem mandantenauswahlItem;
 
 	LunchdecKlasse lunchDeclayer;
 	KPlanKlasse kantinenLayer;
@@ -77,28 +81,11 @@ public class BasicEntryPoint implements EntryPoint {
 		Composite toolbarlayer = createToolBarLayer(headerComp);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(toolbarlayer);
 
-		kantinenPlanItem.addListener(SWT.Selection, (event) -> {
-			render(lunchDeclayer, false);
-			render(votingLayer, false);
-			render(mandantenAuswahlLayer, false);
-			render(kantinenLayer, true);
-
-		});
-
-		lunchDecItem.addListener(SWT.Selection, (event) -> {
-			render(kantinenLayer, false);
-			render(votingLayer, false);
-			render(mandantenAuswahlLayer, false);
-			render(lunchDeclayer, true);
-		});
-
-		votingItem.addListener(SWT.Selection, (event) -> {
-			render(kantinenLayer, false);
-			render(lunchDeclayer, false);
-			render(mandantenAuswahlLayer, false);
-			render(votingLayer, true);
-		});
-
+		kantinenPlanItem.addListener(SWT.Selection, (event) -> activate(kantinenLayer));
+		lunchDecItem.addListener(SWT.Selection, (event) -> activate(lunchDeclayer));
+		votingItem.addListener(SWT.Selection, (event) -> activate(votingLayer));
+		mandantenauswahlItem.addListener(SWT.Selection, (event) -> activate(mandantenAuswahlLayer));
+		
 		Composite contentPane = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(2, false);
 		contentPane.setLayout(gridLayout);
@@ -107,18 +94,10 @@ public class BasicEntryPoint implements EntryPoint {
 		kantinenLayer = createKantinenPlanLayer(contentPane);
 		mandantenAuswahlLayer = createMandantAuswahlLayer(contentPane);
 		votingLayer = createVotinLayer(contentPane);
-		render(kantinenLayer, false);
-		render(lunchDeclayer, false);
-		render(votingLayer, false);
-		render(mandantenAuswahlLayer, true);
-
-
+		activate(mandantenAuswahlLayer);
 
 		mandantenAuswahlLayer.registerOnButtonClick(
 				(combo) -> mandant.setText("Mandant: " + combo.getItem(combo.getSelectionIndex())));
-		
-
-		
 
 		return parent;
 	}
@@ -141,7 +120,7 @@ public class BasicEntryPoint implements EntryPoint {
 		result.setLayout(new FillLayout());
 
 		Label logo = new Label(result, SWT.NONE);
-		Image image = new Image(result.getDisplay(), "Test.png");
+		Image image = new Image(result.getDisplay(), "res\\Test.png");
 		logo.setImage(image);
 		logo.addListener(SWT.Dispose, evt -> image.dispose());
 
@@ -192,6 +171,11 @@ public class BasicEntryPoint implements EntryPoint {
 		new ToolItem(dieToolbar, SWT.SEPARATOR);
 		kantinenPlanItem = new ToolItem(dieToolbar, SWT.PUSH);
 		kantinenPlanItem.setText("Wochenplan Kantine");
+		new ToolItem(dieToolbar, SWT.SEPARATOR);
+		mandantenauswahlItem = new ToolItem(dieToolbar, SWT.PUSH);
+		mandantenauswahlItem.setData(RWT.CUSTOM_VARIANT, "mandantToolItem");
+		mandantenauswahlItem.setText("Mandantenauswahl");
+
 		dieToolbar.addListener(SWT.Dispose, evt -> lunchDecItem.dispose());
 	}
 
@@ -212,11 +196,17 @@ public class BasicEntryPoint implements EntryPoint {
 		return new VotingKlasse(parent, SWT.NONE);
 	}
 
-	private void render(Composite parent, boolean isVisible) {
-		GridData layoutData = (GridData) parent.getLayoutData();
-		layoutData.exclude = !isVisible;
-		parent.setVisible(isVisible);
-		scrolledComposite.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+	private void activate(Composite layer) {
+		Stream.of(layer.getParent().getChildren()).forEach(child -> {
+			child.setVisible(child == layer);
+			GridData layoutData = (GridData) child.getLayoutData();
+			if( layoutData != null ) {
+				layoutData.exclude = child != layer;
+			}
+			
+		});
+		scrolledComposite.setMinSize(layer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		layer.setBounds(scrolledComposite.getClientArea());
 	}
 
 }

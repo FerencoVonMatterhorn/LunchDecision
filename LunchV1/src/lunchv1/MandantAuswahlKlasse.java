@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -24,7 +23,6 @@ public class MandantAuswahlKlasse extends Composite {
 
 	private Composite createMandantAuswahlLayer(Composite parent) {
 		parent.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().grab(true, true).align(SWT.CENTER, SWT.CENTER).applyTo(parent);
 
 		Text mandant = new Text(parent, SWT.NONE);
 		mandant.setText("Bitte wählen sie ihren Mandanten aus:");
